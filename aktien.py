@@ -1,6 +1,12 @@
 import csv
+from stock import stock
+from pricedata import 
+from hashtable import  
 
-
+class stockmanager:
+    def __init__(self):
+        self.by_name = hashtable()
+        self.by_symbol = hashtable()
 
 
 while True:
