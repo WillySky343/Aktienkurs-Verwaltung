@@ -1,4 +1,3 @@
-#aktien.py
 
 class stock:
     def __init__(self, name, wkn, symbol):
