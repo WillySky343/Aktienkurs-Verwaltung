@@ -1,7 +1,7 @@
 import csv
-from stock import stock
-from pricedata import 
-from hashtable import  
+from classes.stock import stock
+from classes.pricedata import 
+from classes.hashtable import  
 
 class stockmanager:
     def __init__(self):
