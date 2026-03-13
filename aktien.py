@@ -1,16 +1,12 @@
 import csv
 from classes.stock import stock
-from classes.pricedata import 
-from classes.hashtable import  
+from classes.pricedata import PriceData
+from classes.hashtable import Hashtable
 
 class stockmanager:
     def __init__(self):
-        self.by_name = hashtable()
-        self.by_symbol = hashtable()
-
-
-def add_stock(self, name, wkn, symbol):
-
+        self.by_name = Hashtable()
+        self.by_symbol = Hashtable()
 
 while True:
     print("----- Aktienverwaltung -----")
