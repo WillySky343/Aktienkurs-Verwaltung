@@ -8,6 +8,13 @@ class stockmanager:
         self.by_name = Hashtable()
         self.by_symbol = Hashtable()
 
+    def add_stock(self, name, wkn, symbol):
+        new_stock = stock(name, wkn, symbol)
+        self.by_name.insert(name, new_stock)
+        self.by_symbol.insert(symbol, new_stock)
+
+    
+
 while True:
     print("----- Aktienverwaltung -----")
     print("1.ADD 2.DEL 3.IMPORT 4.SEARCH 5.PLOT 6.SAVE 7.LOAD 8.QUIT")
