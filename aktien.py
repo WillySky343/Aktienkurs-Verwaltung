@@ -12,6 +12,17 @@ class stockmanager:
         new_stock = stock(name, wkn, symbol)
         self.by_name.insert(name, new_stock)
         self.by_symbol.insert(symbol, new_stock)
+        print(f"Aktie '{name}' erfolgreich hinzugefügt.")
+
+    def delete_stock(self, identifier):
+        #identifier->name oder symbol
+        stock = self.by_name.search(identifier) or self.by_symbol.search(identifier)
+        if stock:
+            self.by_name.delete(stock.name)
+            self.by_symbol.delete(stock.symbol)
+            print(f"Aktie '{identifier}' gelöscht.")
+        else:
+            print("Aktie nicht gefunden.")
 
     
 
