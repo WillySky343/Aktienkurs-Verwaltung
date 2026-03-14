@@ -20,4 +20,18 @@ class Hashtable:
         self.table[index].append((key, value))
 
     def search(self, key):
+        index = self._hash(key)
+        for k, v in self.table[index]:
+            if k == key:
+                return v
+            return None
         #inhalt des Schlüssels zurückgeben
+
+    def delete(self, key):
+        index = self._hash(key)
+        for i, (k, v) in enumerate(self.table[index]):
+            if k == key:
+                del self.table[index][i]
+                return True
+            return False
+        #entfernt den Schlüssel und seinen Wert
