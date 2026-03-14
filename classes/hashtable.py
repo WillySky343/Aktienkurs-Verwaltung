@@ -12,7 +12,7 @@ class Hashtable:
     def insert(self, key, value):
         index = self._hash(key)
         #duplicate check
-        for i, (k, v) in enumerate(self.table[index]):#enumerate->index+value
+        for i, (k, _) in enumerate(self.table[index]):#enumerate->index+value
             if k == key:
                 self.table[index][i] = (key, value)
                 return
@@ -24,14 +24,14 @@ class Hashtable:
         for k, v in self.table[index]:
             if k == key:
                 return v
-            return None
+        return None
         #inhalt des Schlüssels zurückgeben
 
     def delete(self, key):
         index = self._hash(key)
-        for i, (k, v) in enumerate(self.table[index]):
+        for i, (k, _) in enumerate(self.table[index]):
             if k == key:
                 del self.table[index][i]
                 return True
-            return False
+        return False
         #entfernt den Schlüssel und seinen Wert
