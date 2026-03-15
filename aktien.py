@@ -1,4 +1,5 @@
 import csv
+import json
 from classes.stock import stock
 from classes.pricedata import PriceData
 from classes.hashtable import Hashtable
@@ -8,12 +9,14 @@ class stockmanager:
         self.by_name = Hashtable()
         self.by_symbol = Hashtable()
 
+########-ADD FUNCTION-###########
     def add_stock(self, name, wkn, symbol):
         new_stock = stock(name, wkn, symbol)
         self.by_name.insert(name, new_stock)
         self.by_symbol.insert(symbol, new_stock)
         print(f"Aktie '{name}' erfolgreich hinzugefügt.")
 
+############-DELETE FUNCTION-###########
     def delete_stock(self, identifier):
         #identifier->name oder symbol
         stock = self.by_name.search(identifier) or self.by_symbol.search(identifier)
@@ -24,6 +27,94 @@ class stockmanager:
         else:
             print("Aktie nicht gefunden.")
 
+###########-IMPORT FUNCTION-###########
+    def import_csv(self, identifier, filename):
+        stock = self.by_name.search(identifier) or self.by_symbol.search(identifier)
+        if not stock:
+            print("Aktie nicht gefunden. Bitte zuerst ADD nutzen.")
+            return
+        
+        try:
+            with open(filename, mode='r', encoding='utf-8') as file:
+                reader = csv.DictReader(file)
+                # Wir nehmen die letzten 30 Einträge
+                data_list = list(reader)[:30]
+                stock.history = []
+                for row in data_list:
+                    #Anpassung der Spaltennamen je nach CSV-Format (Nasdaq Style)
+                    p = PriceData(
+                        row.get('Date'), row.get('Close/Last', row.get('Close')).replace('$', ''),
+                        row.get('Volume'), row.get('Open').replace('$', ''),
+                        row.get('High').replace('$', ''), row.get('Low').replace('$', '')
+                    )
+                    stock.history.append(p)
+            print(f"{len(stock.history)} Kurswerte für {stock.name} importiert.")
+        except Exception as e:
+            print(f"Fehler beim Import: {e}")
+
+###########-SEARCH FUNCTION-###########
+    def search_stock(self, identifier):
+        stock = self.by_name.search(identifier) or self.by_symbol.search(identifier)
+        if stock:
+            print(f"\nName: {stock.name} | WKN: {stock.wkn} | Symbol: {stock.symbol}")
+            if stock.history:
+                latest = stock.history[0]
+                print(f"Aktuellster Kurs ({latest.date}): Close: {latest.close}, Vol: {latest.volume}")
+            else:
+                print("Keine Kursdaten vorhanden.")
+        else:
+            print("Aktie nicht gefunden.")
+
+##########-PLOT FUNCTION-###########
+    def plot_stock(self, identifier):
+        stock = self.by_name.search(identifier) or self.by_symbol.search(identifier)
+        if not stock or not stock.history:
+            print("Keine Daten zum Plotten vorhanden.")
+            return
+
+        print(f"\nSchlusskurse (ASCII) für {stock.name}:")
+        prices = [p.close for p in stock.history][::-1] # Umdrehen für chronologische Anzeige
+        if not prices: return
+        
+        min_p, max_p = min(prices), max(prices)
+        range_p = max_p - min_p if max_p != min_p else 1
+        
+        for p in prices:
+            # Skalierung auf 20 Einheiten Breite
+            bar_length = int((p - min_p) / range_p * 20) + 1
+            print(f"{p:8.2f} | {'#' * bar_length}")
+
+  
+    def load_data(self, filename):
+        try:
+            with open(filename, 'r') as f:
+                data = json.load(f)
+                for s in data: 
+                    Stock = stock(s['name'], s['wkn'], s['symbol'])
+                    for p in s['history']:
+                        Stock.history.append(PriceData(p['date'], p['open'], p['close'], p['high'], p['low'], p['volume']))
+                        self.by_name.insert(Stock.name, Stock)
+                        self.by_symbol.insert(Stock.symbol, Stock)
+                    print("Data loaded successfully.")
+        except FileNotFoundError:
+            print("Data file not found.")
+    
+    def save_data(self, filename):
+        data = []
+        # Wir durchlaufen das flache Array
+        for item in self.by_name.table:
+            # Wir überspringen leere Fächer (None) und Grabsteine (DELETED)
+            if item is not None and item[0] != Hashtable.DELETED:
+                stock_obj = item[1] # Das Stock-Objekt holen
+                history_data = [vars(p) for p in stock_obj.history]
+                data.append({
+                    'name': stock_obj.name, 'wkn': stock_obj.wkn, 'symbol': stock_obj.symbol,
+                    'history': history_data
+                })
+        with open(filename, 'w') as f:
+            json.dump(data, f)
+        print("Daten gespeichert.")
+
 def main():
     manager = stockmanager()
 
@@ -33,27 +124,24 @@ def main():
         choice = input("Auswahl: ")
 
         if choice == '1':
-            manager.add_stock(
-                input("Name: "),
-                input("WKN: "),
-                input("Kürzel: ")
-            )
+            manager.add_stock(input("Name: "),
+                              input("WKN: "),
+                              input("Kürzel: "))
         elif choice == '2':
-            manager.delete_stock(
-                input("Name oder Kürzel zum Löschen: ")
-            )
+            manager.delete_stock(input("Name oder Kürzel zum Löschen: "))
         elif choice == '3':
-            print("placeholder for import functionality")
+            manager.import_csv(input("Aktienname/Kürzel: "),
+                               input("CSV Dateiname: "))
         elif choice == '4':
-            search_input = input("Suche nach Name oder Kürzel: ")
+            manager.search_stock(input("Suche nach Name oder Kürzel: "))
         elif choice == '5':
-            plot_input = input("Plot für Aktie: ")
+            manager.plot_stock(input("Plot für Aktie: "))
         elif choice == '6':
-            print("placeholder for save functionality")
+            manager.save_data("stocks.json")
         elif choice == '7':
-            print("placeholder for load functionality")
+            manager.load_data("stocks.json")
         elif choice == '8':
             break
-    
+
 if __name__ == "__main__":
     main()
