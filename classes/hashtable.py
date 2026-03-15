@@ -24,6 +24,7 @@ class Hashtable:
         for k, v in self.table[index]:
             if k == key:
                 return v
+        print(f"Key '{key}' not found.")
         return None
         #inhalt des Schlüssels zurückgeben
 
