@@ -59,7 +59,7 @@ class stockmanager:
             print(f"\nName: {stock.name} | WKN: {stock.wkn} | Symbol: {stock.symbol}")
             if stock.history:
                 latest = stock.history[0]
-                print(f"Aktuellster Kurs ({latest.date}): Close: {latest.close}, Vol: {latest.volume}")
+                print(f"Aktuellster Kurs ({latest.date}): Close: {latest.close}, Volume: {latest.volume}, Open: {latest.open}, High: {latest.high}, Low: {latest.low}")
             else:
                 print("Keine Kursdaten vorhanden.")
         else:
@@ -137,9 +137,9 @@ def main():
         elif choice == '5':
             manager.plot_stock(input("Plot für Aktie: "))
         elif choice == '6':
-            manager.save_data("stocks.json")
+            manager.save_data(input("Dateiname zum Speichern: "))
         elif choice == '7':
-            manager.load_data("stocks.json")
+            manager.load_data(input("Dateiname zum Laden: "))
         elif choice == '8':
             break
 
