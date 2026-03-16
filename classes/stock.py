@@ -1,4 +1,3 @@
-
 class stock:
     def __init__(self, name, wkn, symbol):
         self.name = name
