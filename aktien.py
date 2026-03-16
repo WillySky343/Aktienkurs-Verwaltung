@@ -73,14 +73,14 @@ class stockmanager:
             return
 
         print(f"\nSchlusskurse (ASCII) für {stock.name}:")
-        prices = [p.close for p in stock.history][::-1] # Umdrehen für chronologische Anzeige
+        prices = [p.close for p in stock.history][::-1] 
         if not prices: return
         
         min_p, max_p = min(prices), max(prices)
         range_p = max_p - min_p if max_p != min_p else 1
         
         for p in prices:
-            # Skalierung auf 20 Einheiten Breite
+  
             bar_length = int((p - min_p) / range_p * 20) + 1
             print(f"{p:8.2f} | {'#' * bar_length}")
 
