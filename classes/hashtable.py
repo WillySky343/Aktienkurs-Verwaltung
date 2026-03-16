@@ -18,7 +18,7 @@ class Hashtable:
         index = self._hash(key)
         
         for i in range(self.size):
-            probe_index = (index + i**2) % self.size
+            probe_index = (index + i**2) % self.size #quadratisches Sondieren
             if self.table[probe_index] is None or self.table[probe_index][0] == self.DELETED:
                 self.table[probe_index] = (key, value)
                 self.count += 1
