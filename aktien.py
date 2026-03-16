@@ -92,10 +92,10 @@ class stockmanager:
                 for s in data: 
                     Stock = stock(s['name'], s['wkn'], s['symbol'])
                     for p in s['history']:
-                        Stock.history.append(PriceData(p['date'], p['open'], p['close'], p['high'], p['low'], p['volume']))
-                        self.by_name.insert(Stock.name, Stock)
-                        self.by_symbol.insert(Stock.symbol, Stock)
-                    print("Daten erfolgreich geladen.")
+                        Stock.history.append(PriceData(p['date'], p['close'], p['volume'], p['open'], p['high'], p['low']))
+                    self.by_name.insert(Stock.name, Stock)
+                    self.by_symbol.insert(Stock.symbol, Stock)
+                print("Daten erfolgreich geladen.")
         except FileNotFoundError:
             print("Datei nicht gefunden.")
 
