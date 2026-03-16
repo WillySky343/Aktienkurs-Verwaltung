@@ -7,5 +7,4 @@ class PriceData:
         self.high = float(high)
         self.low = float(low)
 
-# Datenstruktur für eine Aktie
     

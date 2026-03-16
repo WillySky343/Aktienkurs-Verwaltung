@@ -14,7 +14,7 @@ class stockmanager:
         new_stock = stock(name, wkn, symbol)
         self.by_name.insert(name, new_stock)
         self.by_symbol.insert(symbol, new_stock)
-        print(f"Aktie '{name}' erfolgreich hinzugefügt.")
+        print(f"Stock '{name}' successfully added.")
 
 ############-DELETE FUNCTION-###########
     def delete_stock(self, identifier):
@@ -23,34 +23,34 @@ class stockmanager:
         if stock:
             self.by_name.delete(stock.name)
             self.by_symbol.delete(stock.symbol)
-            print(f"Aktie '{identifier}' gelöscht.")
+            print(f"Stock '{identifier}' deleted.")
         else:
-            print("Aktie nicht gefunden.")
+            print("Stock not found.")
 
 ###########-IMPORT FUNCTION-###########
     def import_csv(self, identifier, filename):
         stock = self.by_name.search(identifier) or self.by_symbol.search(identifier)
         if not stock:
-            print("Aktie nicht gefunden. Bitte zuerst ADD nutzen.")
+            print("Stock not found.")
             return
         
         try:
             with open(filename, mode='r', encoding='utf-8') as file:
                 reader = csv.DictReader(file)
-                # Wir nehmen die letzten 30 Einträge
+
                 data_list = list(reader)[:30]
                 stock.history = []
                 for row in data_list:
-                    #Anpassung der Spaltennamen je nach CSV-Format (Nasdaq Style)
+
                     p = PriceData(
                         row.get('Date'), row.get('Close/Last', row.get('Close')).replace('$', ''),
                         row.get('Volume'), row.get('Open').replace('$', ''),
                         row.get('High').replace('$', ''), row.get('Low').replace('$', '')
                     )
                     stock.history.append(p)
-            print(f"{len(stock.history)} Kurswerte für {stock.name} importiert.")
+            print(f"{len(stock.history)} price values for {stock.name} imported.")
         except Exception as e:
-            print(f"Fehler beim Import: {e}")
+            print(f"Error during import: {e}")
 
 ###########-SEARCH FUNCTION-###########
     def search_stock(self, identifier):
@@ -59,20 +59,20 @@ class stockmanager:
             print(f"\nName: {stock.name} | WKN: {stock.wkn} | Symbol: {stock.symbol}")
             if stock.history:
                 latest = stock.history[0]
-                print(f"Aktuellster Kurs ({latest.date}): Close: {latest.close}, Vol: {latest.volume}")
+                print(f"Latest Price ({latest.date}): Close: {latest.close}, Vol: {latest.volume}")
             else:
-                print("Keine Kursdaten vorhanden.")
+                print("No price data available.")
         else:
-            print("Aktie nicht gefunden.")
+            print("Stock not found.")
 
 ##########-PLOT FUNCTION-###########
     def plot_stock(self, identifier):
         stock = self.by_name.search(identifier) or self.by_symbol.search(identifier)
         if not stock or not stock.history:
-            print("Keine Daten zum Plotten vorhanden.")
+            print("No data available for plotting.")
             return
 
-        print(f"\nSchlusskurse (ASCII) für {stock.name}:")
+        print(f"\nClosing prices (ASCII) for {stock.name}:")
         prices = [p.close for p in stock.history][::-1] # Umdrehen für chronologische Anzeige
         if not prices: return
         
@@ -113,29 +113,29 @@ class stockmanager:
                 })
         with open(filename, 'w') as f:
             json.dump(data, f)
-        print("Daten gespeichert.")
+        print("Data saved.")
 
 def main():
     manager = stockmanager()
 
     while True:
-        print("----- Aktienverwaltung -----")
+        print("----- Stock Management -----")
         print("1.ADD 2.DEL 3.IMPORT 4.SEARCH 5.PLOT 6.SAVE 7.LOAD 8.QUIT")
-        choice = input("Auswahl: ")
+        choice = input("Selection: ")
 
         if choice == '1':
             manager.add_stock(input("Name: "),
                               input("WKN: "),
-                              input("Kürzel: "))
+                              input("Symbol: "))
         elif choice == '2':
-            manager.delete_stock(input("Name oder Kürzel zum Löschen: "))
+            manager.delete_stock(input("Name or Symbol to delete: "))
         elif choice == '3':
-            manager.import_csv(input("Aktienname/Kürzel: "),
-                               input("CSV Dateiname: "))
+            manager.import_csv(input("Stock name/Symbol: "),
+                               input("CSV filename: "))
         elif choice == '4':
-            manager.search_stock(input("Suche nach Name oder Kürzel: "))
+            manager.search_stock(input("Search by Name or Symbol: "))
         elif choice == '5':
-            manager.plot_stock(input("Plot für Aktie: "))
+            manager.plot_stock(input("Plot for Stock: "))
         elif choice == '6':
             manager.save_data("stocks.json")
         elif choice == '7':

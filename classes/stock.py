@@ -4,4 +4,4 @@ class stock:
         self.name = name
         self.wkn = wkn
         self.symbol = symbol
-        self.history = []  # Liste für die letzten 30 Tage (PriceData Objekte)
+        self.history = []  #Liste der letzten 30 tage (pricedata)
