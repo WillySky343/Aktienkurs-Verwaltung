@@ -1,5 +1,5 @@
 class Hashtable:
-    DELETED = "<GELOESCHT>"
+    DELETED = "<GELOESCHT>"#Tombstone Prinzip
 
     def __init__(self, size=2003): 
         self.size = size
@@ -13,9 +13,6 @@ class Hashtable:
         return hash_val     
     
     def insert(self, key, value):
-
-        if self.count >= self.size // 2:
-            print("Warning: Load Factor > 0.5. Consider resizing the hashtable.")
 
         index = self._hash(key)
         
