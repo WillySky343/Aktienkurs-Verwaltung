@@ -1,15 +1,16 @@
 class Hashtable:
     DELETED = "<GELOESCHT>"#Tombstone Prinzip
 
-    def __init__(self, size=2003): 
+    def __init__(self, size=2003): #Load factor ~ 0.5 
         self.size = size
         self.table = [None] * self.size
         self.count = 0 
     
+    #hashfunktion
     def _hash(self, key): 
         hash_val = 0
         for char in key:    #unabhängig von Länge
-            hash_val = (hash_val * 31 + ord(char)) % self.size
+            hash_val = (hash_val * 31 + ord(char)) % self.size 
         return hash_val     
     
     def insert(self, key, value):
