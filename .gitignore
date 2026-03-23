@@ -1,0 +1,23 @@
+# Python System-Dateien (Bytecode)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Lokale Einstellungen von Editoren
+.vscode/
+.idea/
+*.swp
+
+# Windows System-Dateien
+Thumbs.db
+desktop.ini
+
+# Falls du virtuelle Umgebungen nutzt
+venv/
+.env/
+
+# Datendateien (optional)
+# Wenn du nicht willst, dass deine CSVs oder JSONs auf GitHub landen:
+# *.csv
+# *.json
